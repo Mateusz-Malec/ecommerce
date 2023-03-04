@@ -10,4 +10,5 @@ def home(request):
 
 
 def index(request):
-    return render(request, "home/index.html", {'dane': 'Tutaj będą dane'})
+    template = loader.get_template('index.html')
+    return HttpResponse(template.render({'dane' : 'janusz'}))
