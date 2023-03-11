@@ -33,6 +33,12 @@
     {% block content %}
     {% endblock %}
     {{dane}}
+
+    {% for c in computers %}
+    <div>
+        <p>{{ c.full_name }}, id: {{c.id}}</p>
+    </div>
+    {% endfor %}
 </div>
 </body>
 </html>

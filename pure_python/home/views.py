@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
+from .models import Computer
 
 
 # Create your views here.
@@ -11,4 +12,5 @@ def home(request):
 
 def index(request):
     template = loader.get_template('index.html')
-    return HttpResponse(template.render({'dane' : 'janusz'}))
+    computers = {"computers" : Computer.objects.all()}
+    return HttpResponse(template.render(computers))
