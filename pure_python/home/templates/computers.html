@@ -5,11 +5,15 @@
     <div class="card-header">
         Liczba dostępnych obiektów: {{computers.count}}
     </div>
-    <ul class="list-group list-group-flush">
-        {% for c in computers %}
-        <a href="{{c.id}}"><li class="list-group-item">{{ c.full_name }} <br/> {{c.price}} zł</li></a>
-        {% endfor %}
-    </ul>
+    <div class="card-body">
+        <div class="list-group list-group-flush">
+            {% for c in computers %}
+            <a href="{{c.id}}" class="list-group-item list-group-item-action">
+                {{ c.full_name }} <br/> {{c.price}} zł
+            </a>
+            {% endfor %}
+        </div>
+    </div>
 </div>
 
 {%endblock content%}
