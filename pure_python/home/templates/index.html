@@ -35,17 +35,6 @@
     <div class="container">
         {% block content %}
 
-        <div class="card" style="width: 18rem;">
-            <div class="card-header">
-                Zasoby
-            </div>
-            <ul class="list-group list-group-flush">
-                {% for c in computers %}
-                <li class="list-group-item"><a href="{{c.id}}"> id: {{c.id}} / {{ c.full_name }}</a></li>
-                {% endfor %}
-            </ul>
-        </div>
-
         {% endblock %}
     </div>
 </div>

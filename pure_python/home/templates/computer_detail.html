@@ -1,11 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{computer.full_name}}</title>
-</head>
-<body>
+{%extends "index.html" %}
+{% block content %}
 {{computer.full_name}}
 {{computer.description}}
-</body>
-</html>
+{%endblock content%}

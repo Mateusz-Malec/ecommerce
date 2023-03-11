@@ -13,7 +13,7 @@ def home(request):
 def index(request):
     # template = loader.get_template('index.html')
     computers = {"computers": Computer.objects.all()}
-    return render(request, 'index.html', computers)
+    return render(request, 'computers.html', computers)
     # return HttpResponse(template.render(computers))
 
 
