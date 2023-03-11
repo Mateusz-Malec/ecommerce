@@ -7,7 +7,7 @@
     </div>
     <ul class="list-group list-group-flush">
         {% for c in computers %}
-        <li class="list-group-item"><a href="{{c.id}}"> id: {{c.id}} / {{ c.full_name }}</a></li>
+        <a href="{{c.id}}"><li class="list-group-item">{{ c.full_name }} <br/> {{c.price}} zł</li></a>
         {% endfor %}
     </ul>
 </div>
