@@ -1,5 +1,18 @@
 {%extends "index.html" %}
 {% block content %}
-{{computer.full_name}}
-{{computer.description}}
+<div class="card">
+    <div class="card-header">
+        {{computer.full_name}}
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item"><h2>{{computer.price}} zł</h2></li>
+        <li class="list-group-item">Dostępne: {{computer.numbers}} szt.</li>
+        <li class="list-group-item">CPU: {{computer.cpu}}</li>
+        <li class="list-group-item">GPU: {{computer.gpu}}</li>
+        <li class="list-group-item">RAM: {{computer.ram}}</li>
+        <li class="list-group-item">System: {{computer.system}}</li>
+        <li class="list-group-item">Opis produktu:<br/> {{computer.description}}</li>
+        <li class="list-group-item">id producenta: {{computer.computer_id}} / id sprzedawcy: {{computer.id}}</li>
+    </ul>
+</div>
 {%endblock content%}
