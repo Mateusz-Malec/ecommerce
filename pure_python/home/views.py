@@ -11,6 +11,12 @@ def home(request):
 
 
 def index(request):
-    template = loader.get_template('index.html')
-    computers = {"computers" : Computer.objects.all()}
-    return HttpResponse(template.render(computers))
+    # template = loader.get_template('index.html')
+    computers = {"computers": Computer.objects.all()}
+    return render(request, 'index.html', computers)
+    # return HttpResponse(template.render(computers))
+
+
+def computer_detail(request, computer_id):
+    computer = Computer.objects.get(pk=computer_id)
+    return render(request, 'computer_detail.html', {"computer": computer})
