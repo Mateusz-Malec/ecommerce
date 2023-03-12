@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     #'home',
     'django_bootstrap5',
+    'django_bootstrap_icons',
     'home.apps.HomeConfig'
 ]
 

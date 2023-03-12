@@ -9,12 +9,14 @@
         <ul class="list-group list-group-flush">
             <li class="list-group-item"><h2>{{computer.price}} zł</h2></li>
             <li class="list-group-item">Dostępne: {{computer.numbers}} szt.</li>
-            <li class="list-group-item">CPU: {{computer.cpu}}</li>
-            <li class="list-group-item">GPU: {{computer.gpu}}</li>
+            <li class="list-group-item">Producent: {{computer.manufacturer}}</li>
+            <li class="list-group-item">Procesor: {{computer.cpu}}</li>
+            <li class="list-group-item">Grafika: {{computer.gpu}}</li>
             <li class="list-group-item">RAM: {{computer.ram}}</li>
             <li class="list-group-item">System: {{computer.system}}</li>
         </ul>
-        <div class="card-footer text-muted">id producenta: {{computer.computer_id}} / id sprzedawcy: {{computer.id}}</div>
+        <div class="card-footer text-muted">id producenta: {{computer.computer_id}} / id sprzedawcy: {{computer.id}}
+        </div>
     </div>
 </div>
 {%endblock content%}

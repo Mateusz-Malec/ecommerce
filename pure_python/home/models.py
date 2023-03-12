@@ -19,6 +19,7 @@ class Computer(Product):
     computer_id = models.CharField(max_length=20)
     full_name = models.CharField(max_length=150)
     description = models.CharField(max_length=1000, default="")
+    manufacturer = models.CharField(max_length=20, default="")
     cpu = models.CharField(max_length=50, default="")
     gpu = models.CharField(max_length=50, default="")
     ram = models.CharField(max_length=50, default="")
