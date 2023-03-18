@@ -24,11 +24,12 @@
         </ul>
     </div>
     <div class="text-end">
+        <button type="button" class="btn btn-outline-success me-3">{% bs_icon 'cart' %} Koszyk</button>
         <button type="button" class="btn btn-outline-dark me-2">Twoje konto</button>
         <!--                    <button type="button" class="btn btn-warning">Sign-up</button>-->
     </div>
 </nav>
-<div class="container">
+<div class="container-fluid">
     {% block content %}
     <div class="jumbotron jumbotron-fluid">
         <div class="container">
@@ -36,8 +37,33 @@
             <p class="lead">W naszym sklepie możesz znaleźć wiele produktów.</p>
         </div>
     </div>
-    {% endblock %}
-</div>
 
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for c in computers %}
+        <div class="col">
+            <a href="computers/{{c.id}}" class="list-group-item list-group-item-action">
+                <div class="card h-100">
+                    <img class="card-img-top"
+                         src="https://cdn.x-kom.pl/i/setup/images/prod/big/product-new-big,,2021/2/pr_2021_2_24_11_37_18_636_02.jpg"
+                         alt="Card image cap">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ c.full_name }}</h5>
+                    </div>
+                    <div class="card-footer">
+                        <p class="card-text">{{c.price}} zł</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    {% endblock %}
+
+
+</div>
+<footer class="bg-light text-center ">
+    <div class="container p-4 text-center">© 2023 Copyright</div>
+</footer>
 </body>
 </html>

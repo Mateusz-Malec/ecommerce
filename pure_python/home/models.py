@@ -16,7 +16,7 @@ class Product(models.Model):
 
 
 class Computer(Product):
-    computer_id = models.CharField(max_length=20)
+    #computer_id = models.CharField(max_length=20)
     full_name = models.CharField(max_length=150)
     description = models.CharField(max_length=1000, default="")
     manufacturer = models.CharField(max_length=20, default="")
