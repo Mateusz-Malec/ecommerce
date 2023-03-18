@@ -1,4 +1,5 @@
 {%extends "index.html" %}
+{% load bootstrap_icons %}
 {% block title %}{{computer.full_name}} - E-commerce{% endblock %}
 {% block content %}
 <div class="card">
@@ -9,12 +10,26 @@
     <div class="card-body">
         <ul class="list-group list-group-flush">
             <li class="list-group-item"><h2>{{computer.price}} zł</h2></li>
-            <li class="list-group-item">Dostępne: {{computer.numbers}} szt.</li>
+            {% if computer.numbers == 0 %}
+            <li class="list-group-item text-danger">
+                {% bs_icon 'x-circle' %} Niedostępne
+            </li>
+            {% else %}
+            <li class="list-group-item text-success">
+                {% bs_icon 'check-circle' %} Dostępne: {{computer.numbers}} szt.
+            </li>
+            {% endif %}
             <li class="list-group-item">Producent: {{computer.manufacturer}}</li>
-            <li class="list-group-item">Procesor: {{computer.cpu}}</li>
-            <li class="list-group-item">Grafika: {{computer.gpu}}</li>
-            <li class="list-group-item">RAM: {{computer.ram}}</li>
-            <li class="list-group-item">System: {{computer.system}}</li>
+            <li class="list-group-item">{% bs_icon 'cpu' %} Procesor: {{computer.cpu}}</li>
+            <li class="list-group-item">{% bs_icon 'gpu-card' %} Grafika: {{computer.gpu}}</li>
+            <li class="list-group-item">{% bs_icon 'memory' %} RAM: {{computer.ram}}</li>
+            <li class="list-group-item">System:
+                {% if "Windows" in computer.system %}
+                {% bs_icon 'windows' %}
+                {% elif "macOS" in computer.system %}
+                {% bs_icon 'apple' %}
+                {% endif %}{{computer.system}}
+            </li>
         </ul>
         <div class="card-footer text-muted">id sprzedawcy: {{computer.id}}</div>
     </div>

@@ -24,7 +24,7 @@
         </ul>
     </div>
     <div class="text-end">
-        <button type="button" class="btn btn-outline-success me-3">{% bs_icon 'cart' %} Koszyk</button>
+        <button type="button" class="btn btn-outline-success me-3">{% bs_icon 'cart' %} Koszyk <span class="badge bg-secondary">0</span></button>
         <button type="button" class="btn btn-outline-dark me-2">Twoje konto</button>
         <!--                    <button type="button" class="btn btn-warning">Sign-up</button>-->
     </div>
@@ -45,7 +45,7 @@
             <a href="computers/{{c.id}}" class="list-group-item list-group-item-action">
                 <div class="card h-100">
                     <img class="card-img-top"
-                         src="https://cdn.x-kom.pl/i/setup/images/prod/big/product-new-big,,2021/2/pr_2021_2_24_11_37_18_636_02.jpg"
+                         src="{{c.image}}"
                          alt="Card image cap">
                     <div class="card-body">
                         <h5 class="card-title">{{ c.full_name }}</h5>

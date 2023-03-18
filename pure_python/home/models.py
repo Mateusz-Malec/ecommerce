@@ -24,3 +24,4 @@ class Computer(Product):
     gpu = models.CharField(max_length=50, default="")
     ram = models.CharField(max_length=50, default="")
     system = models.CharField(max_length=50, default="")
+    image = models.ImageField(upload_to="home/images", default="")
