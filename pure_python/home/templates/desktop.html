@@ -5,13 +5,13 @@
 
 <div class="card">
     <div class="card-header">
-        Liczba dostępnych obiektów: {{computers.count}}
+        Liczba dostępnych obiektów: {{desktops.count}}
     </div>
     <div class="card-body">
         <div class="list-group list-group-flush">
-            {% for c in computers %}
+            {% for c in desktops %}
             <a href="{{c.id}}" class="list-group-item list-group-item-action">
-                <h5 class="card-title">{{ c.full_name }}</h5>
+                <h5 class="card-title">{{ c.name }}</h5>
                 <p class="card-text">{{c.price}} zł</p>
             </a>
             {% endfor %}

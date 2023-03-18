@@ -1,0 +1,37 @@
+{%extends "index.html" %}
+{% load bootstrap_icons %}
+{% block title %}{{computer.full_name}} - E-commerce{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h1 class="card-title">{{desktop.name}}</h1>
+        <p class="card-text">{{desktop.description}}</p>
+    </div>
+    <div class="card-body">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item"><h2>{{desktop.price}} zł</h2></li>
+            {% if desktop.quantity == 0 %}
+            <li class="list-group-item text-danger">
+                {% bs_icon 'x-circle' %} Niedostępne
+            </li>
+            {% else %}
+            <li class="list-group-item text-success">
+                {% bs_icon 'check-circle' %} Dostępne: {{desktop.quantity}} szt.
+            </li>
+            {% endif %}
+            <li class="list-group-item">Producent: {{desktop.manufacturer}}</li>
+            <li class="list-group-item">{% bs_icon 'cpu' %} Procesor: {{desktop.cpu}}</li>
+            <li class="list-group-item">{% bs_icon 'gpu-card' %} Grafika: {{desktop.gpu}}</li>
+            <li class="list-group-item">{% bs_icon 'memory' %} RAM: {{desktop.ram}}</li>
+            <li class="list-group-item">System:
+                {% if "Windows" in desktop.system %}
+                {% bs_icon 'windows' %}
+                {% elif "macOS" in desktop.system %}
+                {% bs_icon 'apple' %}
+                {% endif %}{{desktop.system}}
+            </li>
+        </ul>
+        <div class="card-footer text-muted">id sprzedawcy: {{desktop.id}}</div>
+    </div>
+</div>
+{%endblock content%}

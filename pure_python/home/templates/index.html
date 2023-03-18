@@ -19,7 +19,7 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link" href="{% url 'computers' %}">Komputery</a>
+                <a class="nav-link" href="{% url 'desktops' %}">Komputery stacjonarne</a>
             </li>
         </ul>
     </div>
@@ -40,15 +40,15 @@
 
 
     <div class="row row-cols-1 row-cols-md-3 g-4">
-        {% for c in computers %}
+        {% for c in desktops %}
         <div class="col">
-            <a href="computers/{{c.id}}" class="list-group-item list-group-item-action">
+            <a href="desktops/{{c.id}}" class="list-group-item list-group-item-action">
                 <div class="card h-100">
                     <img class="card-img-top"
                          src="{{c.image}}"
                          alt="Card image cap">
                     <div class="card-body">
-                        <h5 class="card-title">{{ c.full_name }}</h5>
+                        <h5 class="card-title">{{ c.name }}</h5>
                     </div>
                     <div class="card-footer">
                         <p class="card-text">{{c.price}} zł</p>

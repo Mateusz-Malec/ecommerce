@@ -1,24 +1,24 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.template import loader
-from .models import Computer
+from .models import Desktop
 
 
 # Create your views here.
 
 def home(request):
-    computers = {"computers": Computer.objects.all()}
-    return render(request, 'index.html', computers)
+    desktops = {"desktops": Desktop.objects.all()}
+    return render(request, 'index.html', desktops)
 
 
-def computers_(request):
+def desktops_(request):
     # template = loader.get_template('index.html')
-    computers = {"computers": Computer.objects.all()}
-    return render(request, 'computers.html', computers)
+    desktops = {"desktops": Desktop.objects.all()}
+    return render(request, 'desktop.html', desktops)
     # return HttpResponse(template.render(computers))
 
 
-def computer_detail(request, c_id):
+def desktop_detail(request, c_id):
     # computer = Computer.objects.get(pk=c_id)
-    computer = get_object_or_404(Computer, pk=c_id)
-    return render(request, 'computer_detail.html', {"computer": computer})
+    desktop = get_object_or_404(Desktop, pk=c_id)
+    return render(request, 'desktop_detail.html', {"desktop": desktop})
