@@ -1,0 +1,41 @@
+{%extends "index.html" %}
+{% block title %}E-commerce - komputery{% endblock %}
+
+{% block content %}
+<div class="row no-gutters">
+    <div class="col-md-2">
+        <form method="get">
+        {{ filter_form.as_p }}
+        <button type="submit" class="btn btn-primary">Filtruj</button>
+      </form>
+    </div>
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-body">
+                <div class="list-group list-group-flush">
+                    {% if laptops %}
+
+                    {% for c in laptops %}
+                    <a href="{% url 'products' c.id %}" class="list-group-item list-group-item-action">
+                        <h5 class="card-title">{{ c.name }}</h5>
+                        <p class="card-text">{{c.price}} zł</p>
+                    </a>
+                    {% endfor %}
+                    {% endif %}
+
+                    {% if desktops %}
+
+                    {% for c in desktops %}
+                    <a href="{% url 'products' c.id %}" class="list-group-item list-group-item-action">
+                        <h5 class="card-title">{{ c.name }}</h5>
+                        <p class="card-text">{{c.price}} zł</p>
+                    </a>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{%endblock content%}

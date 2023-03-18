@@ -20,6 +20,8 @@
         <ul class="navbar-nav">
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'desktops' %}">Komputery stacjonarne</a>
+            </li><li class="nav-item">
+                <a class="nav-link" href="{% url 'laptops' %}">Laptopy</a>
             </li>
         </ul>
     </div>
@@ -40,9 +42,9 @@
 
 
     <div class="row row-cols-1 row-cols-md-3 g-4">
-        {% for c in desktops %}
+        {% for c in computers %}
         <div class="col">
-            <a href="desktops/{{c.id}}" class="list-group-item list-group-item-action">
+            <a href="{% url 'products' c.id %}" class="list-group-item list-group-item-action">
                 <div class="card h-100">
                     <img class="card-img-top"
                          src="{{c.image}}"

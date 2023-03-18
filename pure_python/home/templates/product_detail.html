@@ -1,0 +1,46 @@
+{%extends "index.html" %}
+{% load bootstrap_icons %}
+{% block title %}{{product.name}} - E-commerce{% endblock %}
+{% block content %}
+<div class="card">
+    <div class="row no-gutters">
+        <div class="col-md-4">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="card-img">
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h3 class="card-title">{{product.name}}</h3>
+                <p class="card-text">{{product.description}}</p>
+                <ul class="list-group list-group-flush">
+                    {% if product.price == 0 %}
+                    <li class="list-group-item text-muted"><h2> - </h2></li>
+                    {% endif %}
+                    {% if product.quantity == 0 %}
+                    <li class="list-group-item text-danger">
+                        {% bs_icon 'x-circle' %} Niedostępne
+                    </li>
+                    {% else %}
+                    <li class="list-group-item text-success">
+                        {% bs_icon 'check-circle' %} Dostępne: {{product.quantity}} szt.
+                    </li>
+                    {% endif %}
+                    <li class="list-group-item">Producent: {{product.manufacturer}}</li>
+                    <li class="list-group-item">{% bs_icon 'cpu' %} Procesor: {{product.cpu}}</li>
+                    <li class="list-group-item">{% bs_icon 'gpu-card' %} Grafika: {{product.gpu}}</li>
+                    <li class="list-group-item">{% bs_icon 'memory' %} RAM: {{product.ram}} GB</li>
+                    <li class="list-group-item">System:
+                        {% if "Windows" in product.system %}
+                        {% bs_icon 'windows' %}
+                        {% elif "macOS" in product.system %}
+                        {% bs_icon 'apple' %}
+                        {% endif %}{{product.system}}
+                    </li>
+                </ul>
+                <div class="card-footer text-muted">id sprzedawcy: {{product.id}}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{%endblock content%}
