@@ -2,7 +2,9 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.template import loader
 from django.contrib.sessions.backends.cache import SessionStore
-
+from django.urls import reverse_lazy
+from django.contrib.auth.views import PasswordResetView
+from django.contrib.messages.views import SuccessMessageMixin
 from .forms import FilterFormDesktops, FilterFormLaptops, UpdateUserForm
 from .models import Computer, Desktop, Laptop, Cart, Product, CartItem
 from django.shortcuts import render
@@ -83,7 +85,8 @@ def laptops(request):
         'filter_form': filter_form,
     }
     # just for example how to use authenthication
-    return isAuthenticated(request, render(request, 'products.html', context))
+    return render(request, 'products.html', context)
+    # return isAuthenticated(request, render(request, 'products.html', context))
 
 
 def details(request, c_id):
@@ -184,3 +187,14 @@ def add_to_cart(request, p_id):
     cart.add_product(product=product)
     # cart, created = CartItem.objects.get_or_create(cart=cart, product=product)
     return redirect('cart')
+
+
+class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
+    template_name = 'password-reset.html'
+    email_template_name = 'password_reset_email.html'
+    subject_template_name = 'password_reset_subject.txt'
+    success_message = "We've emailed you instructions for setting your password, " \
+                      "if an account exists with the email you entered. You should receive them shortly." \
+                      " If you don't receive an email, " \
+                      "please make sure you've entered the address you registered with, and check your spam folder."
+    success_url = reverse_lazy('home')
