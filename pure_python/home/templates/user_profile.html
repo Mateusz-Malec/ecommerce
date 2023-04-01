@@ -1,0 +1,21 @@
+{% extends 'index.html' %}
+{% block content %}
+  <div class="container">
+    <h2>User Profile</h2><br>
+    {% if error %}
+      <div class="alert alert-danger">
+        {{ error }}<br>
+      </div>
+    {% endif %}
+    <form method="POST">
+      {% csrf_token %}
+      Imie:<br>
+      <input type="text" name="name"><br><br>
+      Nazwisko:<br>
+      <input type="text" name="surname"><br><br>
+        E-mail:<br>
+      <input type="text" name="email"><br><br>
+      <input class="btn btn-primary" type="submit" value="Edytuj">
+    </form>
+  </div>
+{% endblock %}

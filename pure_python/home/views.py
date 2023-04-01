@@ -124,6 +124,9 @@ def login_page(request):
     else:
         return render(request, 'login.html')
 def logout_page(request):
-    if request.method == 'POST':
+    if request.method == 'GET':
         auth.logout(request)
         return redirect('home')
+
+def user_profile(request):
+    return render(request, 'user_profile.html')
