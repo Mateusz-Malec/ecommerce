@@ -35,7 +35,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #'home',
     'django_bootstrap5',
     'django_bootstrap_icons',
     'home.apps.HomeConfig'

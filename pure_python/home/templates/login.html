@@ -1,0 +1,19 @@
+{% extends 'index.html' %}
+{% block content %}
+  <div class="container">
+    <h2>LOGIN</h2><br>
+    {% if error %}
+      <div class="alert alert-danger">
+        {{ error }}<br>
+      </div>
+    {% endif %}
+    <form method="POST">
+      {% csrf_token %}
+      Nazwa użytkownika:<br>
+      <input type="text" name="username"><br><br>
+      Hasło:<br>
+      <input type="password" name="password"><br><br>
+      <input class="btn btn-primary" type="submit" value="Zaloguj">
+    </form>
+  </div>
+{% endblock %}

@@ -12,4 +12,7 @@ urlpatterns = [
                   path('products/<c_id>/', views.details, name='products'),
                   #path('products/<c_id>', views.computer_detail)
                   # path('computers/<c_id>', views.AboutView.as_view())
+                  path('signup/', views.signup_page, name='signup_page'),
+                  path('login/', views.login_page, name='login_page'),
+                  path('logout/', views.logout_page, name='logout_page')
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
