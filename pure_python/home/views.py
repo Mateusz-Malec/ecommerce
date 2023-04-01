@@ -150,6 +150,7 @@ def user_profile(request):
 
     return render(request, 'user_profile.html', {'user_form': user_form})
 
+
 # def cart_view(request):
 #     session_id = request.session.session_key or SessionStore().session_key
 #     cart = Cart.objects.get_or_create(user=request.user)
@@ -164,14 +165,14 @@ def cart_view(request):
         cart, created = Cart.objects.get_or_create(user=request.user)
         if not created:
             cart_items = cart.products.all()
-            #cart_items.save()
+            # cart_items.save()
     else:
         session_id = request.session.session_key or SessionStore().session_key
         user = User.objects.get(username='user')
         cart, created = Cart.objects.get_or_create(user=user)
         if not created:
             cart_items = cart.products.all()
-    #cart_items = cart.products.all()
+    # cart_items = cart.products.all()
     total_price = sum(item.price for item in cart_items)
     context = {'cart_items': cart_items, 'total_price': total_price}
     return render(request, 'cart.html', context)
