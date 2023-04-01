@@ -2,10 +2,8 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
-class Client(models.Model):
-    login = models.CharField(max_length=15, default="")
-    first_name = models.CharField(max_length=30, default="")
-    surname = models.CharField(max_length=50, default="")
+class Profile(models.Model):
+    phone_number = models.CharField(max_length=15)
 
 
 class Category(models.Model):
