@@ -113,8 +113,9 @@ def cart_view(request):
             #cart_items.save()
     else:
         session_id = request.session.session_key or SessionStore().session_key
-        user = User.objects.get(username='test')
-        cart, created = Cart.objects.get_or_create(user=user)
+        #user = User.objects.get(username='test')
+        cart, created = Cart.objects.get_or_create(session_id=session_id)
+        session_id.save()
         if not created:
             cart_items = cart.products.all()
     #cart_items = cart.products.all()

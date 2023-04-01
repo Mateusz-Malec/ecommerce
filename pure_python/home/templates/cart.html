@@ -23,16 +23,17 @@
         </thead>
         <tbody>
           {% for item in cart_items %}
+          {{ cart.session_id }}
+              {{ item.priceCI() }}
           <tr>
             <th scope="row">{{ forloop.counter }}</th>
             <td>{{ item.computer.name }}</td>
             <td>
-              {{ cart }}
               <form method="post" action="">
                 {% csrf_token %}
                 <input type="hidden" name="product_id" value="{{ item.product.id }}">
                 <div class="input-group">
-                  <input type="number" class="form-control" name="quantity" value="{{ cart }}" min="1" max="999">
+                  <input type="number" class="form-control" name="quantity" value="{{ item.quantity }}" min="1" max="999">
                   <button type="submit" class="btn btn-primary">Zmień</button>
                 </div>
               </form>
@@ -62,8 +63,8 @@
         </tfoot>
       </table>
       <div class="text-end">
-        <!--<a href="" class="btn btn-secondary">Kontynuuj zakupy</a>
-        <a href="" class="btn btn-primary{% if cart.items.count == 0 %} disabled{% endif %}">Przejdź do kasy</a>-->
+        <a href="" class="btn btn-secondary">Kontynuuj zakupy</a>
+        <a href="" class="btn btn-primary{% if cart.items.count == 0 %} disabled{% endif %}">Przejdź do kasy</a>
       </div>
     </div>
   </div>
