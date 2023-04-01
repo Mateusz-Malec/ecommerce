@@ -10,7 +10,7 @@ from django.shortcuts import redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib import auth
-
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 def home(request):
@@ -82,7 +82,7 @@ def laptops(request):
     #just for example how to use authenthication
     return isAuthenticated(request, render(request, 'products.html', context))
 
-
+#@login_required(login_url = 'login/') possible
 def details(request, c_id):
     # computer = Computer.objects.get(pk=c_id)
     computer = get_object_or_404(Computer, pk=c_id)
