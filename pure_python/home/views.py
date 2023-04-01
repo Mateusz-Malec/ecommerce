@@ -1,21 +1,25 @@
+from django.contrib.sessions.backends.cache import SessionStore
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.template import loader
 
 from .forms import FilterFormDesktops, FilterFormLaptops
-from .models import Computer, Desktop, Laptop
+from .models import Computer, Desktop, Laptop, Cart, Product, CartItem
 from django.shortcuts import render
 
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate
+from django.contrib.auth import logout
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
+
+
 # Create your views here.
 
 def home(request):
     computers = {"computers": Computer.objects.all()}
     return render(request, 'index.html', computers)
+
 
 def isAuthenticated(request, default_view):
     context = {}
@@ -25,6 +29,7 @@ def isAuthenticated(request, default_view):
     else:
         context['userStatus'] = 'niezalogowany'
         return render(request, 'login.html', context)
+
 
 def computers_(request):
     # template = loader.get_template('index.html')
@@ -44,9 +49,9 @@ def computers_(request):
         desktops = Desktop.objects.all()
 
     context = {
-            'desktops': desktops,
-            'filter_form': filter_form,
-        }
+        'desktops': desktops,
+        'filter_form': filter_form,
+    }
 
     return render(request, 'products.html', context)
 
@@ -58,7 +63,7 @@ def laptops(request):
     # computers = {"computers": Computer.objects.all()}
 
     # filter_form = FilterForm(request.GET)
-    #laptops = Laptop.objects.all()
+    # laptops = Laptop.objects.all()
     # products.extends(laptops)
 
     filter_form = FilterFormLaptops(request.GET)
@@ -79,14 +84,52 @@ def laptops(request):
         'laptops': laptops,
         'filter_form': filter_form,
     }
-    #just for example how to use authenthication
+    # just for example how to use authenthication
     return isAuthenticated(request, render(request, 'products.html', context))
 
-#@login_required(login_url = 'login/') possible
+
+# @login_required(login_url = 'login/') possible
+@login_required
 def details(request, c_id):
     # computer = Computer.objects.get(pk=c_id)
     computer = get_object_or_404(Computer, pk=c_id)
     return render(request, 'product_detail.html', {"product": computer})
+
+
+# def cart_view(request):
+#     session_id = request.session.session_key or SessionStore().session_key
+#     cart = Cart.objects.get_or_create(user=request.user)
+#     cart_items = cart.products.all()
+#     total_price = sum(item.price for item in cart_items)
+#     context = {'cart_items': cart_items, 'total_price': total_price}
+#     return render(request, 'cart.html', context)
+
+
+def cart_view(request):
+    if request.user.is_authenticated:
+        cart, created = Cart.objects.get_or_create(user=request.user)
+        if not created:
+            cart_items = cart.products.all()
+            #cart_items.save()
+    else:
+        session_id = request.session.session_key or SessionStore().session_key
+        user = User.objects.get(username='test')
+        cart, created = Cart.objects.get_or_create(user=user)
+        if not created:
+            cart_items = cart.products.all()
+    #cart_items = cart.products.all()
+    total_price = sum(item.price for item in cart_items)
+    context = {'cart_items': cart_items, 'total_price': total_price}
+    return render(request, 'cart.html', context)
+
+
+def add_to_cart(request, p_id):
+    product = get_object_or_404(Product, pk=p_id)
+    cart, __ = Cart.objects.get_or_create(user=request.user)
+    cart.add_product(product=product)
+    # cart, created = CartItem.objects.get_or_create(cart=cart, product=product)
+    return redirect('cart')
+
 
 def signup_page(request):
     context = {}
@@ -111,10 +154,12 @@ def signup_page(request):
                 return redirect('home')
     else:
         return render(request, 'signup.html', context)
+
+
 def login_page(request):
     context = {}
     if request.method == 'POST':
-        user = auth.authenticate(username=request.POST['username'] ,password=request.POST['password'])
+        user = auth.authenticate(username=request.POST['username'], password=request.POST['password'])
         if user is not None:
             auth.login(request, user)
             return redirect('home')
@@ -123,10 +168,9 @@ def login_page(request):
             return render(request, 'login.html', context)
     else:
         return render(request, 'login.html')
-def logout_page(request):
-    if request.method == 'GET':
-        auth.logout(request)
-        return redirect('home')
 
-def user_profile(request):
-    return render(request, 'user_profile.html')
+
+@login_required
+def logout_view(request):
+    logout(request)
+    return redirect('home')

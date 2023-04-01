@@ -10,10 +10,11 @@ urlpatterns = [
                   path('desktops/', views.computers_, name='desktops'),
                   path('laptops/', views.laptops, name='laptops'),
                   path('products/<c_id>/', views.details, name='products'),
-                  #path('products/<c_id>', views.computer_detail)
+                  # path('products/<c_id>', views.computer_detail)
                   # path('computers/<c_id>', views.AboutView.as_view())
-                  path('signup/', views.signup_page, name='signup_page'),
-                  path('login/', views.login_page, name='login_page'),
-                  path('logout/', views.logout_page, name='logout_page'),
-                  path('userprofile/', views.user_profile, name='user_profile')
+                  path('cart/', views.cart_view, name='cart'),
+                  path('cart/add/<p_id>', views.add_to_cart, name='add_to_cart'),
+                  path('signup/', views.signup_page, name='signup'),
+                  path('login/', views.login_page, name='login'),
+                  path('logout/', views.logout_view, name='logout')
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

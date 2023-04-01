@@ -22,6 +22,8 @@
                     {% else %}
                     <li class="list-group-item text-success">
                         {% bs_icon 'check-circle' %} Dostępne: {{product.quantity}} szt.
+
+                        <a class="btn btn-outline-success me-3" href="{% url 'add_to_cart' product.id %}">{% bs_icon 'cart' %} Dodaj do koszyka </a>
                     </li>
                     {% endif %}
                     <li class="list-group-item">Producent: {{product.manufacturer}}</li>

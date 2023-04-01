@@ -1,0 +1,71 @@
+{%extends "index.html" %}
+{% block title %}E-commerce - Koszyk{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <div class="row">
+    <div class="col-12">
+      <h1>Twój koszyk</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nazwa produktu</th>
+            <th scope="col">Ilość</th>
+            <th scope="col">Cena jednostkowa</th>
+            <th scope="col">Cena całkowita</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in cart_items %}
+          <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{ item.computer.name }}</td>
+            <td>
+              {{ cart }}
+              <form method="post" action="">
+                {% csrf_token %}
+                <input type="hidden" name="product_id" value="{{ item.product.id }}">
+                <div class="input-group">
+                  <input type="number" class="form-control" name="quantity" value="{{ cart }}" min="1" max="999">
+                  <button type="submit" class="btn btn-primary">Zmień</button>
+                </div>
+              </form>
+            </td>
+            <td>{{ item.price }} zł</td>
+            <td>{{ item.price }} zł</td>
+            <td>
+              <form method="post" action="">
+                {% csrf_token %}
+                <input type="hidden" name="product_id" value="{{ item.product.id }}">
+                <button type="submit" class="btn btn-danger">Usuń</button>
+              </form>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="6">Twój koszyk jest pusty.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="4"></td>
+            <td><strong>Suma:</strong></td>
+            <td><strong>{{ total_price }} zł</strong></td>
+          </tr>
+        </tfoot>
+      </table>
+      <div class="text-end">
+        <!--<a href="" class="btn btn-secondary">Kontynuuj zakupy</a>
+        <a href="" class="btn btn-primary{% if cart.items.count == 0 %} disabled{% endif %}">Przejdź do kasy</a>-->
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
