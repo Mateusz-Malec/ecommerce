@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.template import loader
 
-from .forms import FilterFormDesktops
+from .forms import FilterFormDesktops, FilterFormLaptops
 from .models import Computer, Desktop, Laptop
 
 
@@ -24,7 +24,7 @@ def computers_(request):
         ram = filter_form.cleaned_data.get('ram')
         system = filter_form.cleaned_data.get('system')
         if ram:
-            desktops = desktops.filter(ram__=ram)
+            desktops = desktops.filter(ram__in=ram)
         if system:
             desktops = desktops.filter(system__in=system)
 
@@ -46,24 +46,26 @@ def laptops(request):
     # computers = {"computers": Computer.objects.all()}
 
     # filter_form = FilterForm(request.GET)
-    laptops = Laptop.objects.all()
+    #laptops = Laptop.objects.all()
     # products.extends(laptops)
 
-    # if filter_form.is_valid():
-    #     ram = filter_form.cleaned_data.get('ram')
-    #     system = filter_form.cleaned_data.get('system')
-    #     if ram:
-    #         laptops = laptops.filter(ram__=ram)
-    #     if system:
-    #         laptops = laptops.filter(system__in=system)
-    #
-    # if not any(filter_form.data.values()):
-    #     laptops = Laptop.objects.all()
-    #     # products.extends(laptops)
+    filter_form = FilterFormLaptops(request.GET)
+    laptops = Laptop.objects.all()
+
+    if filter_form.is_valid():
+        ram = filter_form.cleaned_data.get('ram')
+        system = filter_form.cleaned_data.get('system')
+        if ram:
+            laptops = laptops.filter(ram__in=ram)
+        if system:
+            laptops = laptops.filter(system__in=system)
+
+    if not any(filter_form.data.values()):
+        laptops = Laptop.objects.all()
 
     context = {
         'laptops': laptops,
-        #'filter_form': filter_form,
+        'filter_form': filter_form,
     }
 
     return render(request, 'products.html', context)
