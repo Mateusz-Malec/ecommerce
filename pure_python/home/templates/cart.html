@@ -23,8 +23,6 @@
         </thead>
         <tbody>
           {% for item in cart_items %}
-          {{ cart.session_id }}
-              {{ item.priceCI() }}
           <tr>
             <th scope="row">{{ forloop.counter }}</th>
             <td>{{ item.computer.name }}</td>
@@ -63,7 +61,7 @@
         </tfoot>
       </table>
       <div class="text-end">
-        <a href="" class="btn btn-secondary">Kontynuuj zakupy</a>
+        <a href="{% url 'home'%}" class="btn btn-secondary">Kontynuuj zakupy</a>
         <a href="" class="btn btn-primary{% if cart.items.count == 0 %} disabled{% endif %}">Przejdź do kasy</a>
       </div>
     </div>

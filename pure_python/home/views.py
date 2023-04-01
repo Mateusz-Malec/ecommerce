@@ -167,7 +167,7 @@ def cart_view(request):
             #cart_items.save()
     else:
         session_id = request.session.session_key or SessionStore().session_key
-        user = User.objects.get(username='test')
+        user = User.objects.get(username='user')
         cart, created = Cart.objects.get_or_create(user=user)
         if not created:
             cart_items = cart.products.all()
