@@ -1,20 +1,18 @@
-from django.contrib.sessions.backends.cache import SessionStore
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.template import loader
+from django.contrib.sessions.backends.cache import SessionStore
 
-from .forms import FilterFormDesktops, FilterFormLaptops
+from .forms import FilterFormDesktops, FilterFormLaptops, UpdateUserForm
 from .models import Computer, Desktop, Laptop, Cart, Product, CartItem
 from django.shortcuts import render
 
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
-from django.contrib.auth import logout
-from django.contrib import auth
+from django.contrib.auth import authenticate
+from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
 
-
-# Create your views here.
 
 def home(request):
     computers = {"computers": Computer.objects.all()}
@@ -88,48 +86,10 @@ def laptops(request):
     return isAuthenticated(request, render(request, 'products.html', context))
 
 
-# @login_required(login_url = 'login/') possible
-@login_required
 def details(request, c_id):
     # computer = Computer.objects.get(pk=c_id)
     computer = get_object_or_404(Computer, pk=c_id)
     return render(request, 'product_detail.html', {"product": computer})
-
-
-# def cart_view(request):
-#     session_id = request.session.session_key or SessionStore().session_key
-#     cart = Cart.objects.get_or_create(user=request.user)
-#     cart_items = cart.products.all()
-#     total_price = sum(item.price for item in cart_items)
-#     context = {'cart_items': cart_items, 'total_price': total_price}
-#     return render(request, 'cart.html', context)
-
-
-def cart_view(request):
-    if request.user.is_authenticated:
-        cart, created = Cart.objects.get_or_create(user=request.user)
-        if not created:
-            cart_items = cart.products.all()
-            #cart_items.save()
-    else:
-        session_id = request.session.session_key or SessionStore().session_key
-        #user = User.objects.get(username='test')
-        cart, created = Cart.objects.get_or_create(session_id=session_id)
-        session_id.save()
-        if not created:
-            cart_items = cart.products.all()
-    #cart_items = cart.products.all()
-    total_price = sum(item.price for item in cart_items)
-    context = {'cart_items': cart_items, 'total_price': total_price}
-    return render(request, 'cart.html', context)
-
-
-def add_to_cart(request, p_id):
-    product = get_object_or_404(Product, pk=p_id)
-    cart, __ = Cart.objects.get_or_create(user=request.user)
-    cart.add_product(product=product)
-    # cart, created = CartItem.objects.get_or_create(cart=cart, product=product)
-    return redirect('cart')
 
 
 def signup_page(request):
@@ -171,7 +131,55 @@ def login_page(request):
         return render(request, 'login.html')
 
 
-@login_required
-def logout_view(request):
-    logout(request)
-    return redirect('home')
+def logout_page(request):
+    if request.method == 'GET':
+        auth.logout(request)
+        return redirect('home')
+
+
+@login_required(login_url='/login/')
+def user_profile(request):
+    if request.method == 'POST':
+        user_form = UpdateUserForm(request.POST, instance=request.user)
+
+        if user_form.is_valid():
+            user_form.save()
+            return redirect(to='home')
+    else:
+        user_form = UpdateUserForm(instance=request.user)
+
+    return render(request, 'user_profile.html', {'user_form': user_form})
+
+# def cart_view(request):
+#     session_id = request.session.session_key or SessionStore().session_key
+#     cart = Cart.objects.get_or_create(user=request.user)
+#     cart_items = cart.products.all()
+#     total_price = sum(item.price for item in cart_items)
+#     context = {'cart_items': cart_items, 'total_price': total_price}
+#     return render(request, 'cart.html', context)
+
+
+def cart_view(request):
+    if request.user.is_authenticated:
+        cart, created = Cart.objects.get_or_create(user=request.user)
+        if not created:
+            cart_items = cart.products.all()
+            #cart_items.save()
+    else:
+        session_id = request.session.session_key or SessionStore().session_key
+        user = User.objects.get(username='test')
+        cart, created = Cart.objects.get_or_create(user=user)
+        if not created:
+            cart_items = cart.products.all()
+    #cart_items = cart.products.all()
+    total_price = sum(item.price for item in cart_items)
+    context = {'cart_items': cart_items, 'total_price': total_price}
+    return render(request, 'cart.html', context)
+
+
+def add_to_cart(request, p_id):
+    product = get_object_or_404(Product, pk=p_id)
+    cart, __ = Cart.objects.get_or_create(user=request.user)
+    cart.add_product(product=product)
+    # cart, created = CartItem.objects.get_or_create(cart=cart, product=product)
+    return redirect('cart')
