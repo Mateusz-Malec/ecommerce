@@ -15,7 +15,10 @@ urlpatterns = [
                   # path('products/<c_id>', views.computer_detail)
                   # path('computers/<c_id>', views.AboutView.as_view())
                   path('cart/', views.cart_view, name='cart'),
-                  path('cart/add/<p_id>', views.add_to_cart, name='add_to_cart'),
+                  path('cart/add/<p_id>/', views.add_to_cart, name='add_to_cart'),
+                  path('cart/update/<p_id>/<quant>', views.update_product_in_cart, name='update_product_in_cart'),
+                  path('cart/remove/<p_id>/', views.remove_from_cart, name='remove_from_cart'),
+                  path('generate/', views.generatePDF, name='order_generate'),
                   path('signup/', views.signup_page, name='signup'),
                   path('login/', views.login_page, name='login'),
                   path('logout/', views.logout_page, name='logout'),

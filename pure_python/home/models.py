@@ -42,7 +42,7 @@ class Laptop(Computer):
 
 
 class Cart(models.Model):
-    session_id = models.CharField(max_length=32, unique=True)
+    session_id = models.CharField(max_length=32)
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     products = models.ManyToManyField(Product, through='CartItem')
 

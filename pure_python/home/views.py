@@ -1,19 +1,30 @@
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse
-from django.template import loader
-from django.contrib.sessions.backends.cache import SessionStore
-from django.urls import reverse_lazy
+import locale
+import uuid
+from datetime import date, datetime
+from io import BytesIO
+
+from django.contrib import auth
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.contrib.auth.views import PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
-from .forms import FilterFormDesktops, FilterFormLaptops, UpdateUserForm
-from .models import Computer, Desktop, Laptop, Cart, Product, CartItem
-from django.shortcuts import render
+from django.contrib.sessions.backends.cache import SessionStore
+from django.http import HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse_lazy
+from django.views.decorators.http import require_http_methods
+from reportlab.lib.colors import black
+from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_RIGHT
+from reportlab.lib.pagesizes import letter
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import inch
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
 
-from django.shortcuts import redirect
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate
-from django.contrib import auth, messages
-from django.contrib.auth.decorators import login_required
+from requests import Response
+
+from .forms import FilterFormLaptops, FilterFormDesktops, UpdateUserForm
+from .models import Computer, Desktop, Laptop, Cart, Product
 
 
 def home(request):
@@ -166,18 +177,22 @@ def user_profile(request):
 def cart_view(request):
     if request.user.is_authenticated:
         cart, created = Cart.objects.get_or_create(user=request.user)
-        if not created:
-            cart_items = cart.products.all()
-            # cart_items.save()
     else:
         session_id = request.session.session_key or SessionStore().session_key
-        user = User.objects.get(username='user')
-        cart, created = Cart.objects.get_or_create(user=user)
-        if not created:
-            cart_items = cart.products.all()
-    # cart_items = cart.products.all()
+        if not session_id:
+            session_id = str(uuid.uuid4())
+            request.session['session_id'] = session_id
+        cart, created = Cart.objects.get_or_create(session_id=session_id, user=None)
+
+    cart_items = cart.cartitem_set.all()
     total_price = sum(item.price for item in cart_items)
-    context = {'cart_items': cart_items, 'total_price': total_price}
+    total_quantity = sum(item.quantity for item in cart_items)
+    request.session['total_quantity'] = total_quantity
+    context = {
+        'cart_items': cart_items,
+        'total_price': total_price,
+        'total_quantity': total_quantity
+    }
     return render(request, 'cart.html', context)
 
 
@@ -185,6 +200,25 @@ def add_to_cart(request, p_id):
     product = get_object_or_404(Product, pk=p_id)
     cart, __ = Cart.objects.get_or_create(user=request.user)
     cart.add_product(product=product)
+    # cart, created = CartItem.objects.get_or_create(cart=cart, product=product)
+    return redirect('cart')
+
+
+# @require_http_methods(["PUT"])
+def update_product_in_cart(request, p_id, quant):
+    product = get_object_or_404(Product, pk=p_id)
+    cart, __ = Cart.objects.get_or_create(user=request.user)
+    cart.update_product_quantity(product=product, quantity=int(quant))
+    cart.save()
+    # cart, created = CartItem.objects.get_or_create(cart=cart, product=product)
+    return Response()
+    # return redirect('cart')
+
+
+def remove_from_cart(request, p_id):
+    product = get_object_or_404(Product, pk=p_id)
+    cart, __ = Cart.objects.get_or_create(user=request.user)
+    cart.remove_product(product=product)
     # cart, created = CartItem.objects.get_or_create(cart=cart, product=product)
     return redirect('cart')
 
@@ -198,3 +232,77 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
                       " If you don't receive an email, " \
                       "please make sure you've entered the address you registered with, and check your spam folder."
     success_url = reverse_lazy('home')
+
+
+def generatePDF(request):
+    # Get cart data
+    cart = Cart.objects.get_or_create(user=request.user)[0]
+    cart_items = cart.cartitem_set.all()
+    total_price = sum(item.price for item in cart_items)
+    # Prepare table data
+    locale.setlocale(locale.LC_ALL, 'pl_PL.UTF-8')
+    table_data = [['Lp.', 'Nazwa produktu', 'Ilosc', 'Jm', 'Cena', 'Wartosc']]
+    for i, item in enumerate(cart_items):
+        table_data.append([i + 1, item.product.computer.name, item.quantity, 'szt.',
+                           locale.currency(item.product.price, grouping=True),
+                           locale.currency(item.price, grouping=True)])
+    table_data.append(['', '', '', '', 'Suma:', locale.currency(total_price, grouping=True)])
+    # Define table style
+    style = TableStyle([
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
+        ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 13),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('ALIGN', (0, 1), (-1, -1), 'LEFT'),
+        ('ALIGN', (-1, 1), (-1, -1), 'RIGHT'),
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 1), (-1, -1), 11),
+        ('SPAN', (0, -1), (-3, -1)),
+    ])
+
+    # Create table object
+    t = Table(table_data)
+    t.setStyle(style)
+
+    # Define KUPUJĄCY section
+    title_style = ParagraphStyle(
+        name='date',
+        fontName='Helvetica',
+        fontSize=10,
+        textColor=black,
+        leading=14,
+        spaceAfter=10,
+        alignment=TA_RIGHT
+    )
+
+    generate_date = Paragraph(f'Data wygenerowania: {date.today()}', title_style)
+
+    usertable_data = [['NABYWCA'], [f'{User.get_full_name(request.user)}'], [f'{request.user.email}']]
+
+    userstyle = TableStyle([
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
+        ('ALIGN', (0, 0), (-1, 0), 'LEFT'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 13),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 1), (-1, -1), 11),
+    ])
+
+    u = Table(usertable_data)
+    u.setStyle(userstyle)
+
+    # Build PDF document
+    buffer = BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=letter)
+    elements = [generate_date, u, t]
+    doc.build(elements)
+    pdf = buffer.getvalue()
+    buffer.close()
+
+    # Serve PDF file as a response
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="{request.user}_cart_{date.today()}.pdf"'
+    return response
