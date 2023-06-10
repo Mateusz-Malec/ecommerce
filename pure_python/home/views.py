@@ -28,8 +28,9 @@ from .models import Computer, Desktop, Laptop, Cart, Product
 
 
 def home(request):
-    computers = {"computers": Computer.objects.all()}
-    return render(request, 'index.html', computers)
+    total_quantity = request.session.get('total_quantity')
+    computers = Computer.objects.all()
+    return render(request, 'index.html', {'computers': computers, 'total_quantity': total_quantity})
 
 
 def isAuthenticated(request, default_view):
@@ -240,7 +241,7 @@ def generatePDF(request):
     cart_items = cart.cartitem_set.all()
     total_price = sum(item.price for item in cart_items)
     # Prepare table data
-    locale.setlocale(locale.LC_ALL, 'pl_PL.UTF-8')
+    locale.setlocale(locale.LC_ALL, 'pl_PL')
     table_data = [['Lp.', 'Nazwa produktu', 'Ilosc', 'Jm', 'Cena', 'Wartosc']]
     for i, item in enumerate(cart_items):
         table_data.append([i + 1, item.product.computer.name, item.quantity, 'szt.',

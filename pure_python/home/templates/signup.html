@@ -1,22 +1,28 @@
 {% extends 'index.html' %}
 
 {% block content %}
-  <div class="container">
-    <h2>SIGNUP</h2><br>
+<div class="container">
+    <h2>Rejestracja</h2>
     {% if error %}
-      <div class="alert alert-danger">
-        {{ error }}<br>
-      </div>
+    <div class="alert alert-danger">
+        {{ error }}
+    </div>
     {% endif %}
     <form method="POST">
-      {% csrf_token %}
-      Nazwa użytkownika:<br>
-      <input type="text" name="username"><br><br>
-      Hasło:<br>
-      <input type="password" name="password1"><br><br>
-      Potwierdź hasło:<br>
-      <input type="password" name="password2"><br><br>
-      <input class="btn btn-primary" type="submit" value="Zarejestruj">
+        {% csrf_token %}
+        <div class="form-floating mb-3">
+            <input class="form-control" type="text" name="username" id="signupUsernameInput">
+            <label for="signupUsernameInput">Nazwa użytkownika</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input class="form-control" type="password" name="password1" id="signupPassword1Input">
+            <label for="signupPassword1Input">Hasło</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input class="form-control" type="password" name="password2" id="signupPassword2Input">
+            <label for="signupPassword2Input">Potwierdź hasło</label>
+        </div>
+        <input class="btn btn-primary" type="submit" value="Zarejestruj się">
     </form>
-  </div>
+</div>
 {% endblock %}

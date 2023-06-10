@@ -1,20 +1,24 @@
 {% extends 'index.html' %}
 {% block content %}
-  <div class="container">
-    <h2>LOGIN</h2><br>
+<div class="container">
+    <h2>Logowanie</h2>
     {% if error %}
-      <div class="alert alert-danger">
-        {{ error }}<br>
-      </div>
+    <div class="alert alert-danger">
+        {{ error }}
+    </div>
     {% endif %}
     <form method="POST">
-      {% csrf_token %}
-      Nazwa użytkownika:<br>
-      <input type="text" name="username"><br><br>
-      Hasło:<br>
-      <input type="password" name="password"><br><br>
-      <input class="btn btn-primary" type="submit" value="Zaloguj">
-      <a href="{% url 'password_reset' %}"><i>Forgot Password?</i></a>
+        {% csrf_token %}
+        <div class="form-floating mb-3">
+            <input class="form-control" type="text" name="username" id="loginUsernameInput">
+            <label for="loginUsernameInput">Nazwa użytkownika</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input class="form-control" type="password" name="password" id="loginPasswordInput">
+            <label for="loginPasswordInput">Hasło</label>
+        </div>
+        <input class="btn btn-primary" type="submit" value="Zaloguj">
+        <a href="{% url 'password_reset' %}"><i>Zapomniałeś hasła?</i></a>
     </form>
-  </div>
+</div>
 {% endblock %}

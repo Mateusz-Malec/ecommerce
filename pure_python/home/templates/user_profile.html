@@ -1,5 +1,7 @@
+<!-- templates/profile.html -->
+
 {% extends 'index.html' %}
-{% block title %}Profile Page{% endblock title %}
+{% block title %}Profil użytkownika{% endblock title %}
 {% block content %}
     {% if user_form.errors %}
         <div class="alert alert-danger alert-dismissible" role="alert">
@@ -13,24 +15,29 @@
             </button>
         </div>
     {% endif %}
-    <div class="form-content">
-        <form method="post">
-            {% csrf_token %}
-            <div class="form-row">
-                <div class="col-md-5">
-                    <div class="form-group">
-                        <label class="small mb-1">Name:</label>
-                            {{ user_form.first_name }}
-                        <label class="small mb-1">Surname:</label>
-                            {{ user_form.last_name }}
-                        <label class="small mb-1">Email:</label>
-                            {{ user_form.email }}
-                    </div>
+    <div class="card w-50">
+        <div class="card-header">
+            <h3>Profil użytkownika</h3>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label class="small mb-1" for="id_first_name">Imię:</label>
+                    {{ user_form.first_name }}
                 </div>
-            </div>
-            <br><br>
-            <button type="submit" class="btn btn-dark btn-lg">Save Changes</button>
-            <button type="reset" class="btn btn-dark btn-lg">Reset</button>
-        </form>
+                <div class="form-group">
+                    <label class="small mb-1" for="id_last_name">Nazwisko:</label>
+                    {{ user_form.last_name }}
+                </div>
+                <div class="form-group">
+                    <label class="small mb-1" for="id_email">E-mail:</label>
+                    {{ user_form.email }}
+                </div>
+                <br>
+                <button type="submit" class="btn btn-dark">Zapisz zmiany</button>
+                <button type="reset" class="btn btn-dark">Zresetuj</button>
+            </form>
+        </div>
     </div>
 {% endblock content %}
