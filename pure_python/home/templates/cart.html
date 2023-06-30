@@ -65,9 +65,10 @@
       </table>
       <div class="text-end">
         <a href="{% url 'home'%}" class="btn btn-secondary">Kontynuuj zakupy</a>
+          <a href="{% url 'order_generate' %}" class="btn btn-primary{% if cart.items.count == 0 %} disabled{% endif %}">Potwierdzenie</a>
           <form action="{% url 'checkout'%}" method="POST">
               {% csrf_token %}
-            <button type="submit" id="checkout-button">Zaplać</button>
+            <button type="submit" id="checkout-button" class="btn btn-secondary">Zaplać</button>
           </form>
       </div>
     </div>
