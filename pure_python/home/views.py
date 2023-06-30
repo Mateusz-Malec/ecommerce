@@ -246,7 +246,7 @@ def checkout(request):
     product_keys_list = []
     for i, item in enumerate(cart_items):
         quantity_list.append(item.quantity)
-        product_keys_list.append(item.product_stripe_key)
+        product_keys_list.append(item.product.product_stripe_key)
 
     stripe_products_ordered = []
     for product, quantity in zip(product_keys_list, quantity_list):
