@@ -25,6 +25,10 @@ from requests import Response
 
 from .forms import FilterFormLaptops, FilterFormDesktops, UpdateUserForm
 from .models import Computer, Desktop, Laptop, Cart, Product
+import stripe
+from django.conf import settings
+
+stripe.api_key = 'sk_test_51NO2uwHQS5utYjb55xcVpUI1FL50j4phr5pe4FObTlZ8wDtlLcvmnvO9AA4URancudQimBJMI3U20jalRzDo6pGr00X5w7gD0N'
 
 
 def home(request):
@@ -233,6 +237,26 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
                       " If you don't receive an email, " \
                       "please make sure you've entered the address you registered with, and check your spam folder."
     success_url = reverse_lazy('home')
+
+
+def checkout(request):
+    try:
+        checkout_session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=[
+                {
+                    'price': '`pr_1234`',
+                    'quantity': 1,
+                },
+            ],
+            mode='payment',
+            success_url='http://127.0.0.1:8000/cart',
+            cancel_url='http://127.0.0.1:8000',
+        )
+    except Exception as e:
+        return str(e)
+
+    return redirect({checkout_session.url}, code=303)
 
 
 def generatePDF(request):

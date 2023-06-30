@@ -127,3 +127,9 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = str('kamil.rzezniczek@gmail.com')
 EMAIL_HOST_PASSWORD = str('bfcwldyvlilyjujs')
 
+#Stripe config
+STRIPE_PUBLIC_KEY = 'pk_test_51NO2uwHQS5utYjb5LfmIjPqWVDnlq7VXuIGMX7bw5wfDPISoEQyRvisEDhf9sVzcTLHM394OVQ8xov1mTOXOxPmK003CwJ4sqz'
+
+STRIPE_SECRET_KEY = 'sk_test_51NO2uwHQS5utYjb55xcVpUI1FL50j4phr5pe4FObTlZ8wDtlLcvmnvO9AA4URancudQimBJMI3U20jalRzDo6pGr00X5w7gD0N'
+
+SERVER_HOSTING_URL = 'https://73e2-91-237-73-172.ngrok-free.app'
