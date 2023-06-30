@@ -256,7 +256,7 @@ def checkout(request):
     except Exception as e:
         return str(e)
 
-    return redirect({checkout_session.url}, code=303)
+    return redirect(checkout_session.url, code=303)
 
 
 def generatePDF(request):
