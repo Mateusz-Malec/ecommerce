@@ -28,7 +28,7 @@ from .models import Computer, Desktop, Laptop, Cart, Product
 import stripe
 from django.conf import settings
 
-stripe.api_key = 'sk_test_51NO2uwHQS5utYjb55xcVpUI1FL50j4phr5pe4FObTlZ8wDtlLcvmnvO9AA4URancudQimBJMI3U20jalRzDo6pGr00X5w7gD0N'
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 def home(request):
@@ -240,15 +240,21 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
 
 
 def checkout(request):
+    cart = Cart.objects.get_or_create(user=request.user)[0]
+    cart_items = cart.cartitem_set.all()
+    quantity_list = []
+    product_keys_list = []
+    for i, item in enumerate(cart_items):
+        quantity_list.append(item.quantity)
+        product_keys_list.append(item.product_stripe_key)
+
+    stripe_products_ordered = []
+    for product, quantity in zip(product_keys_list, quantity_list):
+        stripe_products_ordered.append({'price': product, 'quantity': quantity})
     try:
         checkout_session = stripe.checkout.Session.create(
             payment_method_types=['card'],
-            line_items=[
-                {
-                    'price': '`pr_1234`',
-                    'quantity': 1,
-                },
-            ],
+            line_items=stripe_products_ordered,
             mode='payment',
             success_url='http://127.0.0.1:8000/cart',
             cancel_url='http://127.0.0.1:8000',

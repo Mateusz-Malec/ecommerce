@@ -19,7 +19,7 @@ class Product(models.Model):
     product_category = models.ForeignKey(Category, related_name='category_fk', on_delete=models.CASCADE, null=True)
     price = models.IntegerField(default=0)
     quantity = models.IntegerField(default=0)
-
+    product_stripe_key = models.CharField(max_length=50, default="")
 
 class Computer(Product):
     name = models.CharField(max_length=150)
