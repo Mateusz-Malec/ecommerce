@@ -3,75 +3,82 @@
 
 {% block content %}
 <div class="container my-5">
-  <div class="row">
-    <div class="col-12">
-      <h1>Twój koszyk</h1>
+    <div class="row">
+        <div class="col-12">
+            <h1>Twój koszyk</h1>
+        </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-12">
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Nazwa produktu</th>
-            <th scope="col">Ilość</th>
-            <th scope="col">Cena jednostkowa</th>
-            <th scope="col">Cena całkowita</th>
-            <th scope="col"></th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for item in cart_items %}
-          <tr>
-            <th scope="row">{{ forloop.counter }}</th>
-            <td><img src="{{ item.product.computer.image.url }}" class="cart-item-img" alt="{{ item.product.computer.name }}" style="max-width: 100px; padding: 0 10px">
-              <a class="text-decoration-none text-dark" href="{% url 'products' item.product.id %}">{{ item.product.computer.name }}</a></td>
-            <td>
-              <form method="post" action="">
-                {% csrf_token %}
-                <input type="hidden" name="product_id" value="{{ item.product.id }}">
-                <div class="input-group">
-                  <input type="number" class="form-control" name="quantity" value="{{ item.quantity }}" min="1" max="10">
-<!--                  <a class="btn btn-primary" href="  'update_product_in_cart' item.product.id  item.quantity">Zmień</a>-->
-                  <a class="btn btn-primary" href="{% url 'update_product_in_cart' item.product.id item.quantity %}">Zmień</a>
-                </div>
-              </form>
-            </td>
-            <td>{{ item.product.price }} zł</td>
-            <td>{{ item.price }} zł</td>
-            <td>
-              <form method="post" action="">
-                {% csrf_token %}
-                <input type="hidden" name="product_id" value="{{ item.product.id }}">
-<!--                <button type="submit" class="btn btn-danger">Usuń</button>-->
-                <a class="btn btn-danger" href="{% url 'remove_from_cart' item.product.id %}">Usuń</a>
-              </form>
-            </td>
-          </tr>
-          {% empty %}
-          <tr>
-            <td colspan="6">Twój koszyk jest pusty.</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="4"></td>
-            <td><strong>Łączna kwota:</strong></td>
-            <td><strong>{{ total_price }} zł</strong></td>
-          </tr>
-        </tfoot>
-      </table>
-      <div class="text-end">
-          <form action="{% url 'checkout'%}" method="POST">
-              {% csrf_token %}
-              <button type="submit" id="checkout-button" class="btn btn-primary">Zapłać</button>
-              <a href="{% url 'home'%}" class="btn btn-secondary">Kontynuuj zakupy</a>
-              <a href="{% url 'order_generate' %}" class="btn btn-secondary{% if cart.items.count == 0 %} disabled{% endif %}">Potwierdzenie</a>
-          </form>
-      </div>
+
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nazwa produktu</th>
+                    <th scope="col">Ilość</th>
+                    <th scope="col">Cena jednostkowa</th>
+                    <th scope="col">Cena całkowita</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in cart_items %}
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td><img src="{{ item.product.computer.image.url }}" class="cart-item-img"
+                             alt="{{ item.product.computer.name }}" style="max-width: 100px; padding: 0 10px">
+                        <a class="text-decoration-none text-dark" href="{% url 'products' item.product.id %}">
+                            {{ item.product.computer.name }}</a></td>
+                    <td>
+                        <form method="post" action="">
+                            {% csrf_token %}
+                            <input type="hidden" name="product_id" value="{{ item.product.id }}">
+                            <div class="input-group">
+                                <input type="number" class="form-control" name="quantity" value="{{ item.quantity }}"
+                                       min="1" max="10">
+                                <!--                  <a class="btn btn-primary" href="  'update_product_in_cart' item.product.id  item.quantity">Zmień</a>-->
+                                <a class="btn btn-primary"
+                                   href="{% url 'update_product_in_cart' item.product.id item.quantity %}">Zmień</a>
+                            </div>
+                        </form>
+                    </td>
+                    <td>{{ item.product.price }} zł</td>
+                    <td>{{ item.price }} zł</td>
+                    <td>
+                        <form method="post" action="">
+                            {% csrf_token %}
+                            <input type="hidden" name="product_id" value="{{ item.product.id }}">
+                            <!--                <button type="submit" class="btn btn-danger">Usuń</button>-->
+                            <a class="btn btn-danger" href="{% url 'remove_from_cart' item.product.id %}">Usuń</a>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6">Twój koszyk jest pusty.</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td colspan="4"></td>
+                    <td><strong>Łączna kwota:</strong></td>
+                    <td><strong>{{ total_price }} zł</strong></td>
+                </tr>
+                </tfoot>
+            </table>
+            <div class="text-end">
+                <form action="{% url 'checkout'%}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" id="checkout-button" class="btn btn-primary">Zapłać</button>
+                    <a href="{% url 'home'%}" class="btn btn-secondary">Kontynuuj zakupy</a>
+                    <a href="{% url 'order_generate' %}"
+                       class="btn btn-secondary{% if cart.items.count == 0 %} disabled{% endif %}">Potwierdzenie</a>
+                </form>
+            </div>
+        </div>
     </div>
-  </div>
+
 </div>
 {% endblock %}

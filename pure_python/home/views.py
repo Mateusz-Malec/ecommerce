@@ -256,10 +256,15 @@ def checkout(request):
             payment_method_types=['card'],
             line_items=stripe_products_ordered,
             mode='payment',
-            success_url='http://127.0.0.1:8000/cart',
+            success_url='http://127.0.0.1:8000/cart/',
             cancel_url='http://127.0.0.1:8000',
         )
+        cart.is_paid = True
+        cart.save()
+        cart_items.delete()
     except Exception as e:
+        cart.is_paid = False
+        cart.save()
         return str(e)
 
     return redirect(checkout_session.url, code=303)
@@ -328,7 +333,7 @@ def generatePDF(request):
     # Build PDF document
     buffer = BytesIO()
     doc = SimpleDocTemplate(buffer, pagesize=letter)
-    elements = [generate_date, u, t]
+    elements = [generate_date, u, Paragraph(''), t]
     doc.build(elements)
     pdf = buffer.getvalue()
     buffer.close()

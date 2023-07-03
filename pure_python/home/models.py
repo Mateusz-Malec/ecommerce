@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils import timezone
 
 
 class Profile(models.Model):
@@ -20,6 +21,7 @@ class Product(models.Model):
     price = models.IntegerField(default=0)
     quantity = models.IntegerField(default=0)
     product_stripe_key = models.CharField(max_length=50, default="")
+
 
 class Computer(Product):
     name = models.CharField(max_length=150)
@@ -44,7 +46,9 @@ class Laptop(Computer):
 class Cart(models.Model):
     session_id = models.CharField(max_length=32)
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
+    created_at = models.DateTimeField(default=timezone.now)
     products = models.ManyToManyField(Product, through='CartItem')
+    is_paid = models.BooleanField(default=False)
 
     def add_product(self, product, quantity=1):
         """
